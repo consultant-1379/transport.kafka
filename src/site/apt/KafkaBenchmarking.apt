@@ -1,0 +1,105 @@
+	------
+	The Kafka Benchmarking
+	------
+
+About Kafka Benchmarking
+
+[./images/kafka_small.jpg]
+
+	The purpose of benchmarking is to determine the amount of events that can be published by Kafka producer when different 
+	compression algorithms begin used like default, Lz4 and Snappy.
+ 
+* Note: Hardware specification details available {{{./hardwarespecification.html}here}}.
+
+Observations
+
+		[[1]] System is capable of handling 1.03 million messages per second
+		
+			  Message size is around ~ 1KB
+			
+		[[2]] ~1KB * 1Million ~ Network Speed (10000 Mbps)
+		
+		[[3]] No significant improvement in overall performance while using different compression algorithm because by default Kafka is  <<optimized for small messages>>.
+			  The best performance occurs with 1 KB messages. If message size grows like 10MB to 100MB then enabling compression algorithm will reduce the amount of bytes that transfer over the network and eventually improve the performance at the cost of additional CPU utilization.
+		
+Comparison 
+	
+		[[1]] CPU statistics
+		
+[./images/BenchmarkingKafka.jpg]
+		
+		[[2]] Memory statistics
+		
+[./images/BenchmarkingKafka.jpg]
+		
+		[[3]] Network statistics
+		
+[./images/BenchmarkingKafka.jpg]
+		
+		[[4]] Disk I/O statistics
+		
+[./images/BenchmarkingKafka.jpg]
+
+		
+Recommendations
+
+		[[1]] Partitions and Memory Usage
+		
+				Brokers allocates amount of memory specify in <<replica.fetch.max.bytes>>property to each of the replicating partition. 
+				It is advisable to ensure that number of partitions multiplied by size of largest message should obey the property value.
+
+		[[2]] Message Size
+		
+				If system handles overall big and/or medium size messages then it is advisable to use Gzip or Snappy compressions. 
+				Compression will improve the network I/O performance but at the same time invest CPU cycles to compress and decompress the data.
+				So it is about striking a balance between I/O load and CPU load.
+
+Tips & Tricks
+
+		There are several key parameters that need to be revised in order to improve the performance.
+
+		[[1]] <<Parameters influencing Producers>>
+		
+				[[A]] Batch Size 
+					
+					Batch Size <<send.buffer.bytes>> measures the size in total bytes rather than number of messages. Producer sent messages to Kafka brokers only when allocated buffer is full. 
+					If producer is constantly producing messages at high or medium rate then setting an appropriative value will significantly improves the performance.
+			
+				[[B]] Lead Time for Asynchronous mode <<queue.buffering.max.ms>> 
+					
+					The amount of time data will be buffer in asynchronous mode.
+				
+				<<Note:>> All possible producer related configuration available {{{https://kafka.apache.org/documentation.html#producerconfigs}here}}.
+		
+		[[2]] <<Parameters influencing Brokers>>
+		
+				[[A]] Maximum message size <<message.max.bytes>>
+					
+						Maximum message size that broker will accept. Ensure that value of this property should be less than the consumers <<fetch.message.max.bytes>>.
+
+				[[B]] Data file size <<log.segment.bytes>> 
+				
+						The size of a Kafka data file must be larger than any single message and/or multiple of max message size.
+				
+				[[C]] Data replication <<replica.fetch.max.bytes>>
+				
+						Maximum message size a broker can replicate. The value must be larger than <<message.max.bytes>> property of brokers.
+						
+				[[D]] The number of I/O threads <<num.io.threads>>
+						
+						The number of I/O threads that the server uses for executing requests. You should have at least as many threads as you have disks.
+				
+				<<Note:>> All possible brokers related configuration available {{{https://kafka.apache.org/documentation.html#brokerconfigs}here}}. 
+				
+		[[3]] <<Parameters influencing consumer>>
+		
+				[[A]] Maximum number of consumer.
+					 
+					 Consumer can create throughput issue. The maximum number of consumer for a topic is equal to the number of partitions. 
+					 You need enough partitions to handle all the consumer needed to keep up with the producer.
+			
+				[[B]] Message Max Bytes <<fetch.message.max.bytes>>
+					   Maximum message size that a consumer can read/expected. It is highly recommended to match at least broker's property <<message.max.bytes>>.
+				
+				<<Note:>> All possible consumer related configuration available {{{https://kafka.apache.org/documentation.html#consumerconfigs}here}}.
+				

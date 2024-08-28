@@ -1,0 +1,82 @@
+	------
+	The Kafka Java Publisher Client
+	------
+
+The Kafka Java Publisher Client
+
+[./images/kafka_small.jpg]
+
+  You may use the Java Kafka Publisher client to publish the messages to Kafka topics. 
+  Publisher can publish plain text messages or binary messages.
+  
+
+* Maven Dependency
+
+  The client has been released to
+  {{{https://arm101-eiffel004.lmera.ericsson.se:8443/nexus/content/repositories/aia-releases/com.ericsson.component.aia/common/transport/}AIA maven repository}},
+  you may add dependency to you project as:
+
++---------------------------------------------------------------------------------------------------------
+<dependencies>
+  	<dependency>
+  		<groupId>com.ericsson.component.aia.common.transport</groupId>
+  		<artifactId>transport-service</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.ericsson.component.aia.common.transport</groupId>
+  		<artifactId>transport-service-kafka</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+ </dependencies>
++---------------------------------------------------------------------------------------------------------
+
+* Configuration
+
++---------------------
+In order to test publisher functionality following information are mandatory 
+	* Host and port number of Kafka server (bootstrap.servers)
+	* key.serializer & value.serializer
+	* MessageServiceTypes for Kafka is MessageServiceTypes.KAFKA
++---------------------
+
+* Usage from Java
+
++---------------------------------------------------------------------------------------------------------
+import java.util.Properties;
+
+import com.ericsson.component.aia.common.transport.config.PublisherConfiguration;
+import com.ericsson.component.aia.common.transport.service.MessageServiceTypes;
+import com.ericsson.component.aia.common.transport.service.Publisher;
+import com.ericsson.component.aia.common.transport.service.kafka.KafkaFactory;
+
+/**
+ * Simple Kafka publisher example. 
+ * Kafka publisher published 100 messages on TEST topic. 
+ */
+public class PublisherTest {
+	public static void main(String [] a){
+		 String topic="TEST"; 
+		 Properties props = new Properties();
+		 props.put("bootstrap.servers", "localhost:9092");
+		 props.put("acks", "all");
+		 props.put("retries", 0);
+		 props.put("batch.size", 16384);
+		 props.put("linger.ms", 1);
+		 props.put("buffer.memory", 33554432);
+		 props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		 props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		 PublisherConfiguration config = new PublisherConfiguration(props,MessageServiceTypes.KAFKA);
+		 Publisher<String, String> producer = KafkaFactory.createKafkaPublisher(config);
+		 for(int i = 0; i < 100; i++)
+		 {
+			 producer.sendMessage(topic,Integer.toString(i), i+" Test message " +Integer.toString(i));
+		 }
+		 producer.close();
+		 }
+}
+
++---------------------------------------------------------------------------------------------------------
+
+
+* Note: You can get more details on Kafka publisher factory {{{./kafkaPublisherImplDetails.html}here}}.

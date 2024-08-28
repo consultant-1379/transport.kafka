@@ -1,0 +1,101 @@
+	------
+	The Kafka Java Subscriber Client
+	------
+
+The Kafka Java Subscriber Client
+
+[./images/kafka_small.jpg]
+
+   You may use the Java Kafka Subscriber client to subscribe the Kafka topics which are published by Kafka publisher.
+   Subscriber can subscribe plain text messages or binary messages based on messages published by publisher on respective topics.
+
+ 
+
+* Maven Dependency
+
+  The client has been released to
+  {{{https://arm101-eiffel004.lmera.ericsson.se:8443/nexus/content/repositories/aia-releases/com.ericsson.component.aia/common/transport/}AIA maven repository}},
+  you may add dependency to you project as:
+
++---------------------
+<dependencies>
+  	<dependency>
+  		<groupId>com.ericsson.component.aia.common.transport</groupId>
+  		<artifactId>transport-service</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.ericsson.component.aia.common.transport</groupId>
+  		<artifactId>transport-service-kafka</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+ </dependencies>
++---------------------
+
+* Configuration
+
++---------------------
+In order to test Subscriber functionality following information are mandatory 
+	* Host and port number of kafka server (bootstrap.servers)
+	* key.deserializer & value.deserializer ( should match with publisher configuration)
+	* group.id: string defines the Consumer Group this process is consuming on behalf of.
+	* Topics: name of topics for which are interested by the subscriber.
++---------------------
+
+
+* Usage from Java
+
++---------------------
+import java.util.Collection;
+import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ericsson.component.aia.common.transport.config.KafkaSubscriberConfiguration;
+import com.ericsson.component.aia.common.transport.config.builders.SubscriberConfigurationBuilder;
+import com.ericsson.component.aia.common.transport.service.Subscriber;
+import com.ericsson.component.aia.common.transport.service.kafka.subscriber.KafkaConsumerFactory;
+
+/**
+ * Simple Test Stub for Kafka subscriber to subscriber plan text messages.
+ */
+public class SubscriberTest {
+	private final static Logger LOG = LoggerFactory.getLogger(SubscriberTest.class);
+	/**
+	 * Consumer Test Stub
+	 */
+	public static void main(String[] a) {
+		
+		String topic="TEST";
+		Properties props = new Properties();
+		props.put("bootstrap.servers", "localhost:9092");
+		props.put("group.id", "test");
+		props.put("enable.auto.commit", "true");
+		props.put("auto.commit.interval.ms", "1000");
+		props.put("session.timeout.ms", "30000");
+		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		KafkaSubscriberConfiguration<String> conf = SubscriberConfigurationBuilder
+				.<String, String> createkafkaConsumerBuilder(props)
+				.addValueDeserializer(props.getProperty("value.deserializer"))
+				.addKeyDeserializer(props.getProperty("key.deserializer")).addTopic(topic)
+				.addProcessors(1).enableManaged()
+				.addListener(
+						(Collection<String> microBatch) -> {
+							if(LOG.isInfoEnabled())
+							{
+								microBatch.forEach(entry -> LOG.info(" Entry :" + entry));
+							}
+						})
+				.build();
+		Subscriber<String, String> consumer = KafkaConsumerFactory.create(conf);
+		consumer.init(conf);
+		consumer.start();
+	}
+
+}
+
++---------------------
+
+* Note: You can get more details on Kafka Subscriber factory {{{./KafkaSubscriberImplDetails.html}here}}.

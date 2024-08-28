@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ericsson.aia</groupId>
+        <artifactId>integration</artifactId>
+        <version>1.0.48</version>
+    </parent>
+
+    <groupId>com.ericsson.component.aia.common.transport</groupId>
+    <artifactId>transport</artifactId>
+    <version>3.0.21-SNAPSHOT</version>
+    <name>Transport Services</name>
+    <packaging>pom</packaging>
+
+    <organization>
+        <name>LM Ericsson LTD</name>
+        <url>www.ericsson.com</url>
+    </organization>
+
+    <properties>
+        <!-- Property 'git.repository' required during maven release -->
+        <git.repository>AIA/common/transport/transport.kafka</git.repository>
+        <target.java.version>1.7</target.java.version>
+        <maven.javadoc.skip>false</maven.javadoc.skip>
+        <version.datarouting>0.0.29</version.datarouting>
+        <version.aia.common.avro>3.0.28</version.aia.common.avro>
+        <version.hamecrest>1.3</version.hamecrest>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.ericsson.component.aia.common.transport</groupId>
+                <artifactId>transport-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ericsson.component.aia.common.transport</groupId>
+                <artifactId>transport-service-kafka</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ericsson.aia.common</groupId>
+            <artifactId>data-routing-api</artifactId>
+            <version>${version.datarouting}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.13.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_${scala.version}</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.component.aia.common.avro</groupId>
+            <artifactId>kafka-avro-decoder</artifactId>
+            <version>${version.aia.common.avro}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>${version.hamecrest}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>${version.hamecrest}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-parser-combinators_2.12</artifactId>
+            <version>1.1.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.scala-logging</groupId>
+            <artifactId>scala-logging_2.12</artifactId>
+            <version>3.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-collection-compat_2.12</artifactId>
+            <version>2.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-java8-compat_2.12</artifactId>
+            <version>0.9.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.yammer.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
+
+    <modules>
+        <module>transport-service</module>
+        <module>transport-service-kafka</module>
+        <module>transport-service-kafka-partitioners</module>
+        <module>transport-kafka-utilities</module>
+    </modules>
+
+    <scm>
+        <developerConnection>scm:git:ssh://gerrit.ericsson.se:29418/AIA/common/transport/transport.kafka</developerConnection>
+        <tag>HEAD</tag>
+        <connection>scm:git:ssh://gerrit.ericsson.se:29418/AIA/common/transport/transport.kafka</connection>
+    </scm>
+
+</project>

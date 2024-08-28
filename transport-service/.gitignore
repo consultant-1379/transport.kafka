@@ -1,0 +1,13 @@
+
+*classes
+target/
+build/
+.idea
+.svn
+.classpath
+.project
+.settings
+
+/bin/
+/.checkstyle
+/.ucls

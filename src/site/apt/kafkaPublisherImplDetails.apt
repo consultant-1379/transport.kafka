@@ -1,0 +1,10 @@
+	------
+	The Kafka Java Publisher implementation details
+	------
+
+The Kafka Java Publisher implementation details
+
+  AIA infrastructure provides a Kafka factory to initiate instance of Kafka publisher. 
+  <<The Kafka publisher is thread-safe and instance of publisher can be shared among the threads.>>
+
+[./images/kafka_publisher.jpg]

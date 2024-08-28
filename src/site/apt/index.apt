@@ -1,0 +1,33 @@
+	------
+	Transport Service
+	------
+
+What is Transport Service?
+
+	Transport service provides a way to publish and subscribe events. 
+	AIA provides a higher level API to use different underlying transport messaging facilities which are based on 
+	{{{http://docs.confluent.io/2.0.0/clients/index.html}Apache Kafka}} , 
+	{{{ https://www.rabbitmq.com/features.html} RabbitMQ}} and
+	{{{ http://zeromq.org/}ZeroMQ}}.
+
+
+[./images/kafka_small.jpg]
+
+[./images/rabbitmq_small.jpg]
+	
+[./images/zeromq_small.jpg]
+	
+About the client project
+ 
+	The current version of transport service project provides Kafka integration into
+	AIA infrastructure with relevant client, tools and documentation. 
+	Support for RabbitMQ & ZeroMQ will be provided in future releases. 
+
+
+Transport service extension
+
+	In order to provide flexibility to enhance the support for multiple technologies, 
+	AIA transport service API provides generic subscriber and publisher interfaces that requires technology specific implementation.
+
+[./images/aia_transport_generic_extension_point.jpg]
+

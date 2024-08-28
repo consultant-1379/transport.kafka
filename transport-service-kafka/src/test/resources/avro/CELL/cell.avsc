@@ -1,0 +1,27 @@
+{
+  "type": "record",
+  "name": "cell",
+  "namespace": "CELL",
+  "fields": [
+    {
+      "name": "cellId",
+      "type": "string"
+    },
+    {
+      "name": "enodebId",
+      "type": "string"
+    },
+     {
+      "name": "mnc",
+      "type": "int"
+    },
+    {
+      "name": "mcc",
+      "type": "int"
+    },
+    {
+      "name": "mncLength",
+      "type": "int"
+    }
+  ]
+}

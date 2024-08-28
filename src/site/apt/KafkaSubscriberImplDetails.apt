@@ -1,0 +1,17 @@
+	------
+	The Kafka Java Subscriber implementation details
+	------
+
+The Kafka Java Subscriber implementation details
+
+   AIA infrastructure provides a Kafka factory to initiate instance of Kafka subscriber. 
+   Currently AIA Transport service provides managed and extended Kafka subscriber and that can be initiate using Kafka factory. 
+   <<The Kafka subscriber is not a thread-safe.>>
+   
+[./images/kafka_subscriber_impl.jpg]
+
+   You may use the Java Kafka Subscriber client to subscribe the Kafka topics which are published by Kafka publisher.
+   Subscriber can subscribe plain text messages or binary messages based on messages published by publisher on respective topics.
+
+ 
+
